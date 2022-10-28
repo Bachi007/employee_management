@@ -9,9 +9,9 @@ import com.empmng.model.project;
 public interface empdashboard {
 public List<employee> allEmployee();
 public List<project> allProjects();
-public employee viewEmployeeProfile(int empId) throws globalException;
-public project viewSpecificProject(int pId) throws globalException;
-public int empPhnNumber(int empId,String number) throws globalException;
+public employee viewEmployeeProfile(int empId);
+public project viewSpecificProject(int pId) ;
+public int empPhnNumber(int empId,String number);
 public int empDesignation(int empId);
 public int empLocation(int empId);
 public int deltEmp(int empId);

@@ -4,7 +4,7 @@ import com.empmng.exception.globalException;
 import com.empmng.model.employee;
 
 public interface loginregister {
-	employee login(String userName, String password) throws globalException;
+	employee login(String userName, String password);
 
-	int register(employee emp) throws globalException;
+	int register(employee emp);
 }

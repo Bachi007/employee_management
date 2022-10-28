@@ -10,10 +10,12 @@ import com.empmng.exception.globalException;
 import com.empmng.model.employee;
 import com.empmng.model.project;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
 public  class empdashboardImpl implements empdashboard{
 	// method 1 : fetches all data of employee table
+	static Logger log=Logger.getLogger(empdashboardImpl.class);
 	@Override
 	public List<employee> allEmployee(){
 		//making Session
@@ -37,37 +39,41 @@ public  class empdashboardImpl implements empdashboard{
 	}
 	// method 3 : fetches data of a specific employee from employee table
 	@Override
-	public employee viewEmployeeProfile(int empId) throws globalException {
+	public employee viewEmployeeProfile(int empId){
+		employee emp = null;
 		try (Session ses = hibernateUtil.getSession()){
 			// get() methods gets all the value from table of specific empId
-			employee emp = ses.get( employee.class,empId);
+			 emp = ses.get( employee.class,empId);
 			if (emp == null) {
 				// throw exception if Employee with entered empId do not exists  
 				throw new globalException("Employee do not exists");
 			}
-			else
-			return emp;
+		} catch (globalException e) {
+			log.info(e.getMessage());
 		}
+		return emp;
 		
 	}
 	//method 4: fetches data of Specific project
 	@Override
-	public project viewSpecificProject(int pId) throws globalException {
+	public project viewSpecificProject(int pId){
+		project p = null;
 		try(Session ses = hibernateUtil.getSession()){
 			// get() methods gets all the value from table of specific pId
-			project p = ses.get(project.class, pId);
+			p = ses.get(project.class, pId);
 			if (p==null) {
 				throw new globalException("Project with this Id do not exists");
 			}
-			else {
-				return p;
-			}
+		} catch (globalException e) {
+			log.info(e.getMessage());
 		}
+		return p;
 		
 	}
 	//method 5: change Employee's Phone Number
 	@Override
-	public int empPhnNumber(int empId,String number) throws globalException {
+	public int empPhnNumber(int empId,String number) {
+		int update=0;
 		try(Session ses = hibernateUtil.getSession()){
 			employee emp = ses.get( employee.class,empId);
 			if (emp == null) {
@@ -77,12 +83,15 @@ public  class empdashboardImpl implements empdashboard{
 			else {
 				//if employee with empId exist then update phone number
 				//HQL query to update PhoneNumber
-				int update = ses.createQuery("update employee set empPhone =: number where empId =:empId").setParameter("number", number).setParameter("empId", empId).executeUpdate();
+				update = ses.createQuery("update employee set empPhone =: number where empId =:empId").setParameter("number", number).setParameter("empId", empId).executeUpdate();
 				ses.getTransaction().commit();
-				return update;
+				
 			}
+		} catch (globalException e) {
+			// TODO Auto-generated catch block
+			log.info(e.getMessage());
 		}
-		
+		return update;
 	}
 	@Override
 	public int empDesignation(int empId) {
